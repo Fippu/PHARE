@@ -185,7 +185,7 @@ for exon in snps:
                 read = row.alignment
                 
                 # qualtiy check
-                if isinstance(row.query_position, int) and read.query_qualities[row.query_position] > minqual:## apply quality filter : # not empty
+                if isinstance(row.query_position, int) and read.query_qualities[row.query_position] > minqual:## apply quality filter and not empty filter
                     res[read.query_name][index]['triplet'][tripi] = read.query_sequence[row.query_position]
                 else:
                     res[read.query_name][index]['triplet'][tripi] = '-'
