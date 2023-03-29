@@ -84,13 +84,9 @@ The R script consists of the following functions:
 
 - a function to do the initial setup. all variables are stored in a list for easy access (and to simulate a kind of class like structure)
 - a function to read all files in a path
-    * it assumes three numbers the file name: first, the barcode/source, then the subset and lastly the replicate number for in silico replicates
-- a function to join the samples to the data frame and calculate the total number of reads
-    - hapl: the df as returned by read_folder
-    + samples: a dataframe linking a barcode/source to a sample id
-    + min_reads: the minimal number of reads required in each sample
-
-- create snp dataframe and a reference sequence
+    * the barcode number is inferred from the file name!<!-- * it assumes one to three numbers in the file name: first, the barcode/source, then the subset and lastly the replicate number for in silico replicates -->
+- a function to join the sample names to the data frame and calculate the total number of reads
+- a function to create snp/roi dataframe and a reference sequence
     + gb_report: a reportfile downloaded from genbank in .json format, which corresponds to the reference sequence. it is used to calculate exon and intron positions.
     + hapl: the dataframe with all the snps => used to create the output df
 - filter duplicate snps
