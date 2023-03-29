@@ -35,8 +35,7 @@ A fast and simple pipeline to detect haplotypes in Oxford Nanopore MinION data f
 
 
 ## Requirements:
-- artic-pipeline: https://artic.readthedocs.io/en/latest/
-  can be installed using conda/mamba: mamba install -c bioconda -c conda-forge artic
+- conda environment which can be installed using: `conda env create -n ENVNAME --file phare.yml`
 - SeekDeep: https://github.com/bailey-lab/SeekDeep
 - Python 3 (tested using version 3.8.13)
 
@@ -52,7 +51,7 @@ Examples for these files can be found in the templates folder
 
 
 ### 2. Prepare the execution script
-Adapt the haplotypes.slurm file to your needs. The following needs to be adapted:
+Adapt the haplotypes.sh in the examples directory file to your needs. The following needs to be adapted:
 
 - variables
     * gene: the name of the gene or contig which is analyzed. ***needs to be the same as the "target" in the primer file***
@@ -68,10 +67,12 @@ Adapt the haplotypes.slurm file to your needs. The following needs to be adapted
 - check that the haplotype.sh and variance_calc.py calls use your files
 
 ### 3. Execute the script
-Execution needs the artic environment loaded and SeekDeep in Path
+Execution needs the phare environment loaded and SeekDeep in Path
 
 ### 4. Use the included R script to analyze the Result
-The script need the following files:
+The script needs the following packages:
+    install.packages(c('readxl', seqinr', 'reshape2', 'rjson', 'tidyverse', 'ggpubr', 'data.table', 'cowplot'))
+The script needs the following files:
 
 - samples: An excel file with the Barcodes and the corresponding Sample names
 - gb_report: the jsonl file used previously

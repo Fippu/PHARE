@@ -1,6 +1,5 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>body {
   max-width: 980px;
-  outline: 1300px solid #fff;
   margin: 16px auto;
 }
 
@@ -1097,8 +1096,8 @@ from: https://www.asciiart.eu/buildings-and-places/lighthouses
 <p><img alt="an example of the PHARE pipeline output" src="/C:/Users/Philipp/Documents/SNPs/PHARE/pipeline_example.png" /></p>
 <h2 id="requirements">Requirements:<a class="headerlink" href="#requirements" title="Permanent link"></a></h2>
 <ul>
-<li>artic-pipeline: <a href="https://artic.readthedocs.io/en/latest/">https://artic.readthedocs.io/en/latest/</a>
-  can be installed using conda/mamba: mamba install -c bioconda -c conda-forge artic</li>
+<li>conda environment: //
+  can be installed using: conda env create -n ENVNAME &ndash;file phare.yml</li>
 <li>SeekDeep: <a class="magiclink magiclink-github magiclink-repository" href="https://github.com/bailey-lab/SeekDeep" title="GitHub Repository: bailey-lab/SeekDeep">bailey-lab/SeekDeep</a></li>
 <li>Python 3 (tested using version 3.8.13)</li>
 </ul>
@@ -1113,7 +1112,7 @@ from: https://www.asciiart.eu/buildings-and-places/lighthouses
 <li>fasta file with the whole gene (see above)</li>
 </ul>
 <h3 id="2-prepare-the-execution-script">2. Prepare the execution script<a class="headerlink" href="#2-prepare-the-execution-script" title="Permanent link"></a></h3>
-<p>Adapt the haplotypes.slurm file to your needs. The following needs to be adapted:</p>
+<p>Adapt the haplotypes.sh in the examples directory file to your needs. The following needs to be adapted:</p>
 <ul>
 <li>variables<ul>
 <li>gene: the name of the gene or contig which is analyzed. <strong><em>needs to be the same as the &ldquo;target&rdquo; in the primer file</em></strong></li>
@@ -1135,9 +1134,11 @@ from: https://www.asciiart.eu/buildings-and-places/lighthouses
 <li>check that the haplotype.sh and variance_calc.py calls use your files</li>
 </ul>
 <h3 id="3-execute-the-script">3. Execute the script<a class="headerlink" href="#3-execute-the-script" title="Permanent link"></a></h3>
-<p>Execution needs the artic environment loaded and SeekDeep in Path</p>
+<p>Execution needs the phare environment loaded and SeekDeep in Path</p>
 <h3 id="4-use-the-included-r-script-to-analyze-the-result">4. Use the included R script to analyze the Result<a class="headerlink" href="#4-use-the-included-r-script-to-analyze-the-result" title="Permanent link"></a></h3>
-<p>The script need the following files:</p>
+<p>The script needs the following packages:
+    install.packages(c(&lsquo;seqinr&rsquo;, &lsquo;reshape2&rsquo;, &lsquo;rjson&rsquo;, &lsquo;tidyverse&rsquo;, &lsquo;ggpubr&rsquo;, &lsquo;data.table&rsquo;))
+The script needs the following files:</p>
 <ul>
 <li>samples: An excel file with the Barcodes and the corresponding Sample names</li>
 <li>gb_report: the jsonl file used previously</li>
@@ -1152,8 +1153,8 @@ Most importantly though, a threshold has to be set to differentiate between nois
 <li>the barcode number is inferred from the file name!<!-- * it assumes one to three numbers in the file name: first, the barcode/source, then the subset and lastly the replicate number for in silico replicates --></li>
 </ul>
 </li>
-<li>a function to join the samples to the data frame and calculate the total number of reads</li>
-<li>create snp dataframe and a reference sequence<ul>
+<li>a function to join the sample names to the data frame and calculate the total number of reads</li>
+<li>a function to create snp/roi dataframe and a reference sequence<ul>
 <li>gb_report: a reportfile downloaded from genbank in .json format, which corresponds to the reference sequence. it is used to calculate exon and intron positions.</li>
 <li>hapl: the dataframe with all the snps =&gt; used to create the output df</li>
 </ul>

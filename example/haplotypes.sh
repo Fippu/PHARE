@@ -76,6 +76,8 @@ pharedir=$wdir/../
 source=$wdir/input # sample directory
 
 # SAMPLES
-barcodes=(20 21)
+barcodes=(17 18 19 20 21 22 23 24)
 
 run_phare
+
+Rscript analysis.R
