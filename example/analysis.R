@@ -1,4 +1,4 @@
-source('../haplotype_analysis.R')
+source('../scripts/haplotype_analysis.R')
 
 bc_to_sample = read_excel("sample_list.xlsx", col_types = 'numeric') %>%
   arrange(
