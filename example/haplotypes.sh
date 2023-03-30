@@ -80,4 +80,5 @@ barcodes=(17 18 19 20 21 22 23 24)
 
 run_phare
 
+cd $wdir
 Rscript analysis.R
