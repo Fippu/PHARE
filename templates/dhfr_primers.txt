@@ -1,2 +1,0 @@
-target forward reverse
-dhfr TATTCCCAAATAGCTAGTTC AATTTTGTCATCATTTGTTC

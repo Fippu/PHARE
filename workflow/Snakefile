@@ -1,0 +1,110 @@
+configfile: "config/config.yaml"
+report: "workflow/report/workflow.rst"
+
+sample_ids = glob_wildcards("data/samples/{sample}.fastq")
+current_gene = 'dhps'
+
+print(config[current_gene]["maxlen"], config[current_gene]["minlen"])
+# rule set_gene:
+# 	output: "data/samples/{sample}.fastq"
+# 	run: current_gene = 'dhps'
+
+
+rule read_filter:
+	# input: expand("data/samples/{sample}.fastq", sample=sample_ids.sample)
+	input: "data/samples/{sample}.fastq"
+	# input: rules.set_gene.output
+	output: "data/scriptfiles/{sample}.filtered.fastq"
+	params:
+		min_mean_q = config[current_gene]["minqual"],
+		max_length = config[current_gene]["maxlen"],
+		min_length = config[current_gene]["minlen"],
+		length_weight = 10
+	message: "Executing filtlong on the following files {input}."
+	shell: "filtlong {input} --min_mean_q {params.min_mean_q} --max_length {params.max_length} --min_length {params.min_length} --length_weight {params.length_weight} > {output}"
+	#--min_length {minlen} --max_length {maxlen} --min_mean_q {minqual} 
+
+rule minimap:
+	input: rules.read_filter.output
+	output: "data/scriptfiles/{sample}.sorted.bam"
+	threads: 8
+	params:
+		reference = config[current_gene]["generef"]
+	message: "Executing minimap2 on the following files {input}."
+	shell: """
+		minimap2 -a -t {threads} -x map-ont --MD {params.reference} {input} --sam-hit-only | samtools sort -T tmp -o {output}
+		samtools index {output}
+	"""
+
+rule snp_finding:
+	input: rules.minimap.output
+	output: "data/scriptfiles/{sample}.sorted.bam.snps"
+	params:
+		c = config[current_gene]["contig"],
+		q = config[current_gene]["minqual"],
+		r = config[current_gene]["generef"],
+		m = 0.8,
+		n = 0.05
+	shell: "python workflow/scripts/snp_selector.py {input} -c {params.c} -q {params.q} -n {params.n} -r {params.r} -m {params.m}"
+
+rule snp_list:
+	input: expand(["data/scriptfiles/{sample}.sorted.bam.snps"], sample=sample_ids.sample)
+	# input: rules.snp_finding.output
+	# input: "data/scriptfiles/*.sorted.bam.snps"
+	output: "data/scriptfiles/snp_list"
+	shell: "cat {input} | sort -n | uniq > {output}"
+
+
+rule filter_silent:
+	input: snplist=rules.snp_list.output, samples=rules.minimap.output
+	output: "data/scriptfiles/{sample}.sorted.bam.non-silent.snps"
+	params:
+		c = config[current_gene]["contig"],
+		q = config[current_gene]["minqual"],
+		r = config[current_gene]["generef"],
+		g = config[current_gene]["genebank_ref"]
+	output:
+	shell: "python workflow/scripts/filter_silent.py {input.samples} -c {params.c} -g {params.g} -s {input.snplist} -q {params.q} -r {params.r}"
+
+rule nonsilent_snp_list:
+	input: expand(["data/scriptfiles/{sample}.sorted.bam.non-silent.snps"], sample=sample_ids.sample)
+	output: "results/snp_list"
+	shell: "cat {input} | sort -n | uniq > {output}"
+
+
+rule haplotype_determination:
+	input: snplist=rules.nonsilent_snp_list.output, samples=rules.minimap.output
+	output: "results/{sample}.tsv"
+	params:
+		c = config[current_gene]["contig"],
+		q = config[current_gene]["minqual"],
+		r = config[current_gene]["generef"],
+		g = config[current_gene]["genebank_ref"]
+	shell: "python workflow/scripts/variance_calc.py {input.samples} -c {params.c} -g {params.g} -s {input.snplist} -q {params.q} -o {output}"
+
+rule generate_plot:
+	input: expand(["results/{sample}.tsv"], sample=sample_ids.sample)
+	# input: 'results/'
+	params:
+		folder = 'results',
+		pattern = '*.tsv',
+		fasta_ref = config[current_gene]['generef'],
+		gb_report = config[current_gene]['genebank_ref'],
+		gene_name = 'dhps',
+		threshold = 0.05,
+		filter_silent = 1,
+		min_reads = 50
+	output: 'results/' + config[current_gene]['gene_name'] + '_0.05.png'
+	shell: "Rscript workflow/scripts/analysis.R --folder={params.folder} --pattern={params.pattern} --fasta_ref={params.fasta_ref} --gb_report={params.gb_report} --gene_name={params.gene_name} --threshold={params.threshold} --filter_silent={params.filter_silent} --min_reads={params.min_reads}"
+
+
+rule all:
+	# input: "results/snp_list"
+	# input: expand(["data/scriptfiles/{sample}.sorted.bam.non-silent.snps"], sample=sample_ids.sample)
+	# input: expand(["results/{sample}.tsv"], sample=sample_ids.sample)
+	default_target: True
+	input: rules.generate_plot.output
+	# input: 'results/dhps_0.05.png', 'results/dhfr_0.05.png'
+	# params: 
+	# 	gene_name = 'dhps'
+	# input: 'results/{params.gene_name}_0.05.png'

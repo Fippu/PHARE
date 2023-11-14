@@ -1,2 +1,0 @@
-target minlen maxlen
-k13 1800 2800
