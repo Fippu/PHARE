@@ -67,7 +67,7 @@ Examples for these files can be found in the resources folder
 
 
 ### 4. Copy Nanopore read data and execute the Snakemake pipeline
-- Copy your reads into data/samples or create a symbolic link to them in the folder where they are stored. The pipeline expects one .fastq file for each sample.
+- The pipline requires one .fastq file per sample named i.e. "barcode13". The barcode number must be included at the end of the sample name and correspond to the barcode defined in sample_list.xlsx. The pipeline looks for the .fastq sample files in the folder data/samples.
 - Navigate to the root directory of the pipeline and run snakemake: `snakemake --cores all`
 
 

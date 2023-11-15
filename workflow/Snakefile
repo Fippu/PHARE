@@ -11,7 +11,7 @@ rule read_filter:
 	params:
 		min_mean_q = config['minqual'],
 		min_length = lambda w: config['genes'][w.gene]['minlen'] if 'minlen' in config['genes'][w.gene] else config['genes'][w.gene]['targetlen'] - 50,
-		max_length = lambda w: config['genes'][w.gene]['maxlen'] if 'maxlen' in config['genes'][w.gene] else config['genes'][w.gene]['targetlen'] - 50,
+		max_length = lambda w: config['genes'][w.gene]['maxlen'] if 'maxlen' in config['genes'][w.gene] else config['genes'][w.gene]['targetlen'] + 250,
 		# max_length = lambda w: config['genes'][w.gene]["maxlen"],
 		# min_length = lambda w: config['genes'][w.gene]["minlen"],
 		length_weight = 10
@@ -80,7 +80,7 @@ rule generate_plot:
 		pattern = '*.tsv',
 		fasta_ref = lambda w: config['genes'][w.gene]['generef'],
 		gb_report = lambda w: config['genes'][w.gene]['genebank_ref'],
-		gene_name = 'dhps',
+		gene_name = lambda w: w.gene,
 		threshold = config['threshold'],
 		filter_silent = 1, # IF THIS IS SET TO FALSE, THE RULES FILTER_SILENT AND NONSILENT_SNP_LIST HAVE TO BE REMOVED FROM THE PIPELINE
 		min_reads = config['min_reads']

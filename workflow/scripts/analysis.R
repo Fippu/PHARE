@@ -57,3 +57,5 @@ gene = init_phare(
   make_plot_df() %>%
   phare_plot() %>%
   save_plot(dir='results', sup='')
+
+write.csv(gene$df, paste('results', args$gene_name, 'combined_haplotypes.csv', sep='/'))
