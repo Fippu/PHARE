@@ -38,7 +38,7 @@ bc_to_sample = read_excel("config/sample_list.xlsx", col_types = 'text') %>%
 
 print(bc_to_sample$Sample)
 # ANALYZE THE DATA AND GENERATE A PLOT
-dhps = init_phare(
+gene = init_phare(
   folder = args$folder,
   pattern = args$pattern,
   samples = bc_to_sample, # a DATA FRAME! with one column containing `Source` (== barcode) and another titeled `Sample`
@@ -57,4 +57,3 @@ dhps = init_phare(
   make_plot_df() %>%
   phare_plot() %>%
   save_plot(dir='results', sup='')
-# print(dhps)

@@ -492,6 +492,10 @@ phare_plot = function(phare, supl=''){
   snps = phare$snps
   gene = phare$gene
   threshold = phare$threshold
+
+  if (any_na <- any(is.na(melted$Sample_name))){
+    stop('Some Samples don´t have a sample name and cannot be plotted.')
+  }
   
   p1 = (
     ggplot(

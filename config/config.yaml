@@ -1,21 +1,24 @@
-__use_yte__: true
+min_reads: 50
+threshold: 0.05
+minqual: 15
 
-dhps:
-  gene_name: 'dhps'
-  minqual: 15
-  targetlen: 2742
-  maxlen: ?this["dhps/targetlen"] + 250 #2992
-  minlen: ?this["dhps/targetlen"] - 50 #2692
-  generef: 'resources/dhps.fasta'
-  genebank_ref: 'resources/dhps.jsonl'
-  contig: 'NC_004329.3_dhps'
+genes:
+  dhps:
+    targetlen: 2742
+    maxlen: 2992 # IF LEFT EMPTY DEFAULTS TO TARGETLEN + 250
+    minlen: 2692 # IF LEFT EMPTY DEFAULTS TO TARGETLEN - 50
+    generef: 'resources/dhps.fasta'
+    genebank_ref: 'resources/dhps.jsonl'
+    contig: 'NC_004329.3_dhps'
 
-dhfr:
-  gene_name: 'dhfr'
-  minqual: 15
-  targetlen: 1827
-  maxlen: ?this["dhps/targetlen"] + 250 #2992
-  minlen: ?this["dhps/targetlen"] - 50 #2692
-  generef: 'resources/dhfr.fasta'
-  genebank_ref: 'resources/dhfr.jsonl'
-  contig: 'NC_004318.2_dhfr'
+  # dhfr:
+  #   targetlen: 1827
+  #   generef: 'resources/dhfr.fasta'
+  #   genebank_ref: 'resources/dhfr.jsonl'
+  #   contig: 'NC_004318.2_dhfr'
+
+  testdhps:
+    targetlen: 2742
+    generef: 'resources/dhps.fasta'
+    genebank_ref: 'resources/dhps.jsonl'
+    contig: 'NC_004329.3_dhps'
