@@ -11,14 +11,44 @@ genes:
     genebank_ref: 'resources/dhps.jsonl'
     contig: 'NC_004329.3_dhps'
 
-  # dhfr:
-  #   targetlen: 1827
-  #   generef: 'resources/dhfr.fasta'
-  #   genebank_ref: 'resources/dhfr.jsonl'
-  #   contig: 'NC_004318.2_dhfr'
+  dhfr:
+    targetlen: 2034
+    generef: 'resources/dhfr.fasta'
+    genebank_ref: 'resources/dhfr.jsonl'
+    contig: 'NC_004318.2_dhfr'
 
-  testdhps:
-    targetlen: 2742
-    generef: 'resources/dhps.fasta'
-    genebank_ref: 'resources/dhps.jsonl'
-    contig: 'NC_004329.3_dhps'
+  K13:
+    targetlen: 2464
+    generef: 'resources/k13.fasta'
+    genebank_ref: 'resources/k13.jsonl'
+    contig: 'XM_001350122.1_k13'
+
+# # AMPLICON LENGTH: 2464 bp
+# gene='k13'
+# contig='XM_001350122.1_k13'
+# targetlen=2464 
+# minlen=$((targetlen - 50))
+# maxlen=2800
+
+
+# run_phare
+
+# # AMPLICON LENGTH: 2034 bp
+
+# gene='dhfr'
+# contig=NC_004318.2_dhfr
+# targetlen=2034 
+# minlen=$((targetlen - 50))
+# maxlen=2400
+
+
+# run_phare
+
+
+
+# # # LENGTH: 2742 bp
+# gene='dhps'
+# contig='NC_004329.3_dhps'
+# targetlen=2742
+# minlen=$((targetlen - 50))
+# maxlen=3100
