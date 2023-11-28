@@ -107,11 +107,11 @@ for col in roi:
 
 
 
+
+with open(infile + '.json', 'w') as f:
+    json.dump(res, f)
+
 # CACHING DISABLED
-
-    # with open(infile + '.json', 'w') as f:
-    #     json.dump(res, f)
-
 # read cached file
 # else:
 #     with open(infile + '.json') as f:
