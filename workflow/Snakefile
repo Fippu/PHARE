@@ -35,8 +35,8 @@ rule snp_finding:
 		c = lambda w: config['genes'][w.gene]["contig"],
 		q = config['minqual'],
 		r = lambda w: config['genes'][w.gene]["generef"],
-		m = 0.8,
-		n = 0.05
+		m = config['coerage_minimum']
+		n = config['SNP_selection_cut-off']
 	shell: "python workflow/scripts/snp_selector.py {input} -c {params.c} -q {params.q} -n {params.n} -r {params.r} -m {params.m}"
 
 rule snp_list:
@@ -81,9 +81,9 @@ rule generate_plot:
 		fasta_ref = lambda w: config['genes'][w.gene]['generef'],
 		gb_report = lambda w: config['genes'][w.gene]['genebank_ref'],
 		gene_name = lambda w: w.gene,
-		threshold = config['threshold'],
+		threshold = config['minimum_haplotype_frequency'],
 		filter_silent = 1, # IF THIS IS SET TO FALSE, THE RULES FILTER_SILENT AND NONSILENT_SNP_LIST HAVE TO BE REMOVED FROM THE PIPELINE
-		min_reads = config['min_reads']
+		min_reads = config['minimal_number_of_reads_per_sample']
 	output: 'results/{gene}_{threshold}.png'
 	shell: "Rscript workflow/scripts/analysis.R --folder={params.folder} --pattern={params.pattern} --fasta_ref={params.fasta_ref} --gb_report={params.gb_report} --gene_name={params.gene_name} --threshold={params.threshold} --filter_silent={params.filter_silent} --min_reads={params.min_reads}"
 

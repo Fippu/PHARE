@@ -1,7 +1,15 @@
-min_reads: 50
-threshold: 0.05
+# GENERAL SETTINGS
 minqual: 15
 
+# SNP SELECTION SETTINGS
+SNP_selection_cut-off: 0.1
+coverage_minimum: 0.8
+
+# SUMMARY AND PLOT SETTINGS
+minimum_haplotype_frequency: 0.05
+minimal_number_of_reads_per_sample: 50
+
+# SETTINGS FOR INDIVIDUAL GENES
 genes:
   dhps:
     targetlen: 2742
@@ -22,33 +30,3 @@ genes:
     generef: 'resources/k13.fasta'
     genebank_ref: 'resources/k13.jsonl'
     contig: 'XM_001350122.1_k13'
-
-# # AMPLICON LENGTH: 2464 bp
-# gene='k13'
-# contig='XM_001350122.1_k13'
-# targetlen=2464 
-# minlen=$((targetlen - 50))
-# maxlen=2800
-
-
-# run_phare
-
-# # AMPLICON LENGTH: 2034 bp
-
-# gene='dhfr'
-# contig=NC_004318.2_dhfr
-# targetlen=2034 
-# minlen=$((targetlen - 50))
-# maxlen=2400
-
-
-# run_phare
-
-
-
-# # # LENGTH: 2742 bp
-# gene='dhps'
-# contig='NC_004329.3_dhps'
-# targetlen=2742
-# minlen=$((targetlen - 50))
-# maxlen=3100
