@@ -23,7 +23,7 @@
 import argparse
 import pysam
 import sys, csv
-# import json
+import json
 from Bio import SeqIO
 from os import path
 from numpy import loadtxt 

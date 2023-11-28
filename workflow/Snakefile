@@ -90,4 +90,4 @@ rule generate_plot:
 
 rule all:
 	default_target: True
-	input: expand("results/{gene}_{threshold}.png", gene=gene_names, threshold=config['threshold'])
+	input: expand("results/{gene}_{threshold}.png", gene=gene_names, threshold=config['minimum_haplotype_frequency'])
