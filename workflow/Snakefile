@@ -35,7 +35,7 @@ rule snp_finding:
 		c = lambda w: config['genes'][w.gene]["contig"],
 		q = config['minqual'],
 		r = lambda w: config['genes'][w.gene]["generef"],
-		m = config['coerage_minimum'],
+		m = config['coverage_minimum'],
 		n = config['SNP_selection_cut-off']
 	shell: "python workflow/scripts/snp_selector.py {input} -c {params.c} -q {params.q} -n {params.n} -r {params.r} -m {params.m}"
 
