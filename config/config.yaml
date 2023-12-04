@@ -1,15 +1,63 @@
 # GENERAL SETTINGS
+#############################################################################################
+
+# relative or absolute path to a folder containing basecalled nanopore reads in .fastq format.
+# a single file for each barcode is expected (i.e. barcode17.fastq)
+sample_dir: "data/samples"
+
+
+# set the minimal quality (Phread score) which will be used for read filtering
 minqual: 15
 
+
+
+
 # SNP SELECTION SETTINGS
+#############################################################################################
+
+# Minimum % of sequencing reads with SNP at a site:
+# SNPs are found by iterating over the alignment and finding nucleotide sites, 
+# where at least two different bases are found with a frequency above a predefined 
+#threshold (SNP selection cut-off parameter, default 10%) or where the majority 
+# of bases differ from the nucleotide provided in the reference.
 SNP_selection_cut-off: 0.1
+
+# Minimum % of reads covering a nucleotide position considered a SNP:
+# During alignment, minimap2 introduces gaps at the ends of these homopolymers to 
+# correct for the erroneous reads. This leads to a lower coverage and a higher error 
+# rate at these sites. Therefore, SNPs at sites below a coverage minimum of 80% are 
+# filtered out.
 coverage_minimum: 0.8
 
+
+
+
+
 # SUMMARY AND PLOT SETTINGS
+#############################################################################################
+
+# Minimum % of reads with certain haplotype to filter out low abundance haplotypes 
+# that are considered noise.
 minimum_haplotype_frequency: 0.05
+
+# Minimum number of reads for a sample to be included in the finaly plot.
 minimal_number_of_reads_per_sample: 50
 
+
+
+
+
 # SETTINGS FOR INDIVIDUAL GENES
+# create one entry for each gene which should be analyzed.
+# the following parameters are required:
+# Warning: Do not use special characters in the gene name, since it is used in the output filename!
+# - targetlen: exact length of the amplicon (excluding adapters)
+# - maxlen: optional, used for read filtering
+# - minlen: optional, used for read filtering
+# - generef: Gene reference in fasta format a
+# - genbank_ref: genbank report corresponding to the gene reference file in .jsonl format
+# - contig: Name of the contig in the fasta file
+#############################################################################################
 genes:
   dhps:
     targetlen: 2742

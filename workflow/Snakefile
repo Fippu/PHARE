@@ -1,25 +1,29 @@
 configfile: "config/config.yaml"
 report: "workflow/report/workflow.rst"
 
-sample_ids = glob_wildcards("data/samples/{sample}.fastq")
+
+sample_directory = config['sample_dir']
+
+sample_ids = glob_wildcards(sample_directory + "/{sample}.fastq")
 gene_names = list(config['genes'].keys())
 
 
 rule read_filter:
 	input: samples="data/samples/{sample}.fastq"
 	output: "data/scriptfiles/{gene}/{sample}.filtered.fastq"
+	conda: "envs/ngs_tools.yaml"
 	params:
 		min_mean_q = config['minqual'],
 		min_length = lambda w: config['genes'][w.gene]['minlen'] if 'minlen' in config['genes'][w.gene] else config['genes'][w.gene]['targetlen'] - 50,
 		max_length = lambda w: config['genes'][w.gene]['maxlen'] if 'maxlen' in config['genes'][w.gene] else config['genes'][w.gene]['targetlen'] + 250,
-		# max_length = lambda w: config['genes'][w.gene]["maxlen"],
-		# min_length = lambda w: config['genes'][w.gene]["minlen"],
 		length_weight = 10
 	shell: "filtlong {input.samples} --min_mean_q {params.min_mean_q} --max_length {params.max_length} --min_length {params.min_length} --length_weight {params.length_weight} > {output}"
+
 
 rule minimap:
 	input: rules.read_filter.output
 	output: "data/scriptfiles/{gene}/{sample}.sorted.bam"
+	conda: "envs/ngs_tools.yaml"
 	threads: 8
 	params:
 		reference = lambda w: config['genes'][w.gene]["generef"]
@@ -28,9 +32,11 @@ rule minimap:
 		samtools index {output}
 	"""
 
+
 rule snp_finding:
 	input: rules.minimap.output
 	output: "data/scriptfiles/{gene}/{sample}.sorted.bam.snps"
+	conda: "envs/ngs_tools.yaml"
 	params:
 		c = lambda w: config['genes'][w.gene]["contig"],
 		q = config['minqual'],
@@ -38,6 +44,7 @@ rule snp_finding:
 		m = config['coverage_minimum'],
 		n = config['SNP_selection_cut-off']
 	shell: "python workflow/scripts/snp_selector.py {input} -c {params.c} -q {params.q} -n {params.n} -r {params.r} -m {params.m}"
+
 
 rule snp_list:
 	input: expand(["data/scriptfiles/{{gene}}/{sample}.sorted.bam.snps"], sample=sample_ids.sample)
@@ -50,12 +57,14 @@ rule snp_list:
 rule filter_silent:
 	input: snplist=rules.snp_list.output, samples=rules.minimap.output
 	output: "data/scriptfiles/{gene}/{sample}.sorted.bam.non-silent.snps"
+	conda: "envs/ngs_tools.yaml"
 	params:
 		c = lambda w: config['genes'][w.gene]["contig"],
 		q = config['minqual'],
 		r = lambda w: config['genes'][w.gene]["generef"],
 		g = lambda w: config['genes'][w.gene]["genebank_ref"]
 	shell: "python workflow/scripts/filter_silent.py {input.samples} -c {params.c} -g {params.g} -s {input.snplist} -q {params.q} -r {params.r}"
+
 
 rule nonsilent_snp_list:
 	input: expand(["data/scriptfiles/{{gene}}/{sample}.sorted.bam.non-silent.snps"], sample=sample_ids.sample)
@@ -65,6 +74,7 @@ rule nonsilent_snp_list:
 
 rule haplotype_determination:
 	input: snplist=rules.nonsilent_snp_list.output, samples=rules.minimap.output
+	conda: "envs/ngs_tools.yaml"
 	output: "results/{gene}/{sample}.tsv"
 	params:
 		c = lambda w: config['genes'][w.gene]["contig"],
@@ -73,8 +83,10 @@ rule haplotype_determination:
 		g = lambda w: config['genes'][w.gene]["genebank_ref"]
 	shell: "python workflow/scripts/variance_calc.py {input.samples} -c {params.c} -g {params.g} -s {input.snplist} -q {params.q} -o {output}"
 
+
 rule generate_plot:
 	input: expand(["results/{{gene}}/{sample}.tsv"], sample=sample_ids.sample)
+	conda: "envs/r_packages.yaml"
 	params:
 		folder = lambda w: 'results/'+w.gene,
 		pattern = '*.tsv',
