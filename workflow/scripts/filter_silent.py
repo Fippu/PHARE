@@ -38,6 +38,8 @@ parser.add_argument("-g", "--genbank_file_json", type=str, help="data_report gen
 parser.add_argument("-s", "--snp_file", type=str, help="file with list of SNPs, one nucleotide position per line")
 parser.add_argument("-q", "--min_quality", type=int, help="minimal quality score for base to qualify for haplotype")
 parser.add_argument("-r", "--reference", type=str, default='', help="reference fasta file with. Only required if --filter_silent is set")
+parser.add_argument("--amplicon_start", default=-1, type=int, help="TODO")
+parser.add_argument("--amplicon_end", default=10000000000, type=int, help="TODO")
 args = parser.parse_args()
 config = vars(args)
 # print(config)
@@ -51,6 +53,14 @@ contig = args.contig
 reference = args.reference
 
 minqual = args.min_quality
+
+
+
+
+TMPSTART = args.amplicon_start
+TMPEND = args.amplicon_end
+
+
 
 print(infile)
 print(snpfile)
@@ -120,6 +130,18 @@ for ex in gb['transcripts'][0]['exons']['range']:
         'begin': int(ex['begin']) - ref_begin,
         'end': int(ex['end']) - ref_begin,
     }
+
+
+    if exon['end'] < TMPSTART or exon['begin'] > TMPEND:
+        print('snp removed since outside of area', exon['end'] < TMPSTART, exon['end'], TMPSTART, exon['begin'] > TMPEND, exon['begin'], TMPEND)
+        continue
+
+    # THESE IFS CAN BOTH BE TRUE
+    if exon['begin'] < TMPSTART:
+        exon['begin'] = TMPSTART
+    if exon['end'] > TMPEND:
+        exon['end'] = TMPEND
+
 
     # find and store the snps in that exon
     exon['snps'] = rawsnps[np.logical_and(rawsnps-1 >= exon['begin'], rawsnps <= exon['end'])]
@@ -207,7 +229,7 @@ with open(infile + '.res' + '.json', 'w') as f:
     json.dump({'snps': list(map(int, snpsflat)), 'res': res}, f)
 
 
-
+print(snps)
 #----------------------------------------------------------------------------------------
 # AN EXTRA STEP TO FILTER OUT SILENT MUTATITIONS
 # this can increase sensitivity, because less SNPs have to fulfill the quality requirements

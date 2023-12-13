@@ -59,22 +59,26 @@ minimal_number_of_reads_per_sample: 50
 # - contig: Name of the contig in the fasta file
 #############################################################################################
 genes:
+  # dhps:
+  #   targetlen: 2742
+  #   maxlen: 2992 # IF LEFT EMPTY DEFAULTS TO TARGETLEN + 250
+  #   minlen: 2692 # IF LEFT EMPTY DEFAULTS TO TARGETLEN - 50
+  #   generef: 'resources/dhps.fasta'
+  #   genebank_ref: 'resources/dhps.jsonl'
+  #   contig: 'NC_004329.3_dhps'
+
   dhps:
     targetlen: 2742
-    maxlen: 2992 # IF LEFT EMPTY DEFAULTS TO TARGETLEN + 250
-    minlen: 2692 # IF LEFT EMPTY DEFAULTS TO TARGETLEN - 50
     generef: 'resources/dhps.fasta'
     genebank_ref: 'resources/dhps.jsonl'
     contig: 'NC_004329.3_dhps'
+    amplicon_start: -1
+    amplicon_end: 200000000
+    # maxlen: 1250
+    # minlen: 950 
 
-  dhfr:
-    targetlen: 2034
-    generef: 'resources/dhfr.fasta'
-    genebank_ref: 'resources/dhfr.jsonl'
-    contig: 'NC_004318.2_dhfr'
-
-  K13:
-    targetlen: 2464
-    generef: 'resources/k13.fasta'
-    genebank_ref: 'resources/k13.jsonl'
-    contig: 'XM_001350122.1_k13'
+  # K13:
+  #   targetlen: 2464
+  #   generef: 'resources/k13.fasta'
+  #   genebank_ref: 'resources/k13.jsonl'
+  #   contig: 'XM_001350122.1_k13'

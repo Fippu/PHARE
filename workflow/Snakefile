@@ -9,7 +9,7 @@ gene_names = list(config['genes'].keys())
 
 
 rule read_filter:
-	input: samples="data/samples/{sample}.fastq"
+	input: samples=sample_directory + "/{sample}.fastq"
 	output: "data/scriptfiles/{gene}/{sample}.filtered.fastq"
 	conda: "envs/ngs_tools.yaml"
 	params:
@@ -62,8 +62,10 @@ rule filter_silent:
 		c = lambda w: config['genes'][w.gene]["contig"],
 		q = config['minqual'],
 		r = lambda w: config['genes'][w.gene]["generef"],
-		g = lambda w: config['genes'][w.gene]["genebank_ref"]
-	shell: "python workflow/scripts/filter_silent.py {input.samples} -c {params.c} -g {params.g} -s {input.snplist} -q {params.q} -r {params.r}"
+		g = lambda w: config['genes'][w.gene]["genebank_ref"],
+		amplicon_start = lambda w: config['genes'][w.gene]["amplicon_start"],
+		amplicon_end = lambda w: config['genes'][w.gene]["amplicon_end"]
+	shell: "python workflow/scripts/filter_silent.py {input.samples} -c {params.c} -g {params.g} -s {input.snplist} -q {params.q} -r {params.r} --amplicon_start {params.amplicon_start} --amplicon_end {params.amplicon_end}"
 
 
 rule nonsilent_snp_list:
