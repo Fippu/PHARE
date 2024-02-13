@@ -57,8 +57,8 @@ minqual = args.min_quality
 
 
 
-TMPSTART = args.amplicon_start
-TMPEND = args.amplicon_end
+amplicon_start = args.amplicon_start
+amplicon_end = args.amplicon_end
 
 
 
@@ -132,15 +132,15 @@ for ex in gb['transcripts'][0]['exons']['range']:
     }
 
 
-    if exon['end'] < TMPSTART or exon['begin'] > TMPEND:
-        print('snp removed since outside of area', exon['end'] < TMPSTART, exon['end'], TMPSTART, exon['begin'] > TMPEND, exon['begin'], TMPEND)
+    if exon['end'] < amplicon_start or exon['begin'] > amplicon_end:
+        print('snp removed since outside of area', exon['end'] < amplicon_start, exon['end'], amplicon_start, exon['begin'] > amplicon_end, exon['begin'], amplicon_end)
         continue
 
     # THESE IFS CAN BOTH BE TRUE
-    if exon['begin'] < TMPSTART:
-        exon['begin'] = TMPSTART
-    if exon['end'] > TMPEND:
-        exon['end'] = TMPEND
+    if exon['begin'] < amplicon_start:
+        exon['begin'] = amplicon_start
+    if exon['end'] > amplicon_end:
+        exon['end'] = amplicon_end
 
 
     # find and store the snps in that exon

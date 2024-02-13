@@ -57,6 +57,8 @@ minimal_number_of_reads_per_sample: 50
 # - generef: Gene reference in fasta format a
 # - genbank_ref: genbank report corresponding to the gene reference file in .jsonl format
 # - contig: Name of the contig in the fasta file
+# - amplicon_start: optional, used in case the amplicon is shorter than the generef to define the starting position of the amplicon on the generef
+# - amplicon_end: optional, used in case the amplicon is shorter than the generef to define the end position of the amplicon on the generef
 #############################################################################################
 genes:
   # dhps:
@@ -72,8 +74,6 @@ genes:
     generef: 'resources/dhps.fasta'
     genebank_ref: 'resources/dhps.jsonl'
     contig: 'NC_004329.3_dhps'
-    amplicon_start: -1
-    amplicon_end: 200000000
     # maxlen: 1250
     # minlen: 950 
 

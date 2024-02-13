@@ -63,8 +63,8 @@ rule filter_silent:
 		q = config['minqual'],
 		r = lambda w: config['genes'][w.gene]["generef"],
 		g = lambda w: config['genes'][w.gene]["genebank_ref"],
-		amplicon_start = lambda w: config['genes'][w.gene]["amplicon_start"],
-		amplicon_end = lambda w: config['genes'][w.gene]["amplicon_end"]
+		amplicon_start = lambda w: config['genes'][w.gene]['amplicon_start'] if 'amplicon_start' in config['genes'][w.gene] else -1,
+		amplicon_end = lambda w: config['genes'][w.gene]['amplicon_end'] if 'amplicon_end' in config['genes'][w.gene] else 20000000000
 	shell: "python workflow/scripts/filter_silent.py {input.samples} -c {params.c} -g {params.g} -s {input.snplist} -q {params.q} -r {params.r} --amplicon_start {params.amplicon_start} --amplicon_end {params.amplicon_end}"
 
 
